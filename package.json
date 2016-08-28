@@ -1,7 +1,7 @@
 {
   "name": "modal",
-  "version": "0.2.0",
-  "description": "Javscript Modal Dialog | lightweight, customizable CSS, no dependencies | inspired by Bootstrap",
+  "version": "0.3.0",
+  "description": "Javascript Modal Dialog | lightweight, customizable CSS, no dependencies | inspired by Bootstrap",
   "keywords": [
     "javascript",
     "modal",

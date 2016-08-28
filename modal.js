@@ -1,4 +1,6 @@
-(function(window, document) {
+(function(window, document, undefined) {
+  var TRANSITIONS_SUPPORTED = transitionsSupported();
+
   window.Modal = Modal;
 
   function Modal () {
@@ -6,11 +8,12 @@
       content: "",
       animation: "fade",
       size: null,
-      customClass: null
+      customClass: ""
     };
 
     this.modal = null;
     this.backdrop = null;
+    this.dialog = null;
     this.options = extend(defaults, arguments[0] || {});
   }
 
@@ -20,9 +23,7 @@
   };
 
   function open () {
-    document.body.classList.add("modal-open");
     createModal.call(this);
-    this.modal.style.display = "block";
 
     /*
      * After adding elements to the DOM, use getComputedStyle
@@ -33,6 +34,7 @@
     window.getComputedStyle(this.modal).height;
 
     // Add class to start open animation
+    document.body.classList.add("modal-open");
     this.backdrop.classList.add("in");
     this.modal.classList.add("in");
   }
@@ -40,35 +42,42 @@
   function close () {
     var self = this;
 
-    // Listen for transitionend to remove the DOMNodes afterwards
-    this.modal.addEventListener("transitionend", function (e) {
-      if (e.target === self.modal)
-        self.modal.parentNode.removeChild(self.modal);
-    });
+    if (this.options.animation) {
+      // Listen for transitionend to remove the DOMNodes afterwards
+      this.modal.addEventListener("transitionend", function (e) {
+        if (e.target === self.modal) {
+          self.modal.parentNode.removeChild(self.modal);
+        }
+      });
 
-    this.backdrop.addEventListener("transitionend", function () {
-      self.backdrop.parentNode.removeChild(self.backdrop);
-      document.body.classList.remove("modal-open");
-    });
+      this.backdrop.addEventListener("transitionend", function () {
+        self.backdrop.parentNode.removeChild(self.backdrop);
+        document.body.classList.remove("modal-open");
+      });
 
-    // Remove class to start close animation
-    this.modal.classList.remove("in");
-    this.backdrop.classList.remove("in");
+      // Trigger the event manually if transitions are not supported
+      if (! TRANSITIONS_SUPPORTED) {
+        triggerEvent(this.modal, "transitionend");
+        triggerEvent(this.backdrop, "transitionend");
+      }
 
-    // Trigger the event manually if transitions are not supported
-    if (! hasTransitions()) {
-      triggerEvent(this.modal, "transitionend");
-      triggerEvent(this.backdrop, "transitionend");
+      // Remove class to start close animation
+      this.modal.classList.remove("in");
+      this.backdrop.classList.remove("in");
+    } else {
+      this.modal.parentNode.removeChild(this.modal);
+      this.backdrop.parentNode.removeChild(this.backdrop);
     }
   }
 
   function createModal () {
-    var dialog, content, fragment;
     var self = this;
+
+    // Define the animation class
     var animation = this.options.animation || "";
 
     // Create a document fragment for DOM building
-    fragment = document.createDocumentFragment();
+    var fragment = document.createDocumentFragment();
 
     /* <backdrop> */
 
@@ -92,18 +101,15 @@
 
     /* <dialog> */
 
-    dialog = document.createElement("div");
-    dialog.className = "modal-dialog";
+    this.dialog = document.createElement("div");
+    this.dialog.className = "modal-dialog " + this.options.customClass;
 
     if (typeof this.options.size === "string")
-      dialog.classList.add("modal-" + this.options.size);
+      this.dialog.classList.add("modal-" + this.options.size);
     else if (typeof this.options.size === "number")
-      dialog.style.width = this.options.size + "px";
+      this.dialog.style.width = this.options.size + "px";
 
     /* <content> */
-
-    content = document.createElement("div");
-    content.className = "modal-content";
 
     /*
      * If content is an HTML string, append the HTML string.
@@ -111,16 +117,14 @@
      */
 
     if (typeof this.options.content === "string") {
-      content.innerHTML = this.options.content;
+      this.dialog.innerHTML = this.options.content;
     } else {
-      content.appendChild(this.options.content);
+      this.dialog.appendChild(this.options.content.cloneNode(true));
     }
-
-    dialog.appendChild(content);
 
     /* </content> */
 
-    this.modal.appendChild(dialog);
+    this.modal.appendChild(this.dialog);
 
     /* </dialog> */
 
@@ -141,7 +145,7 @@
     return element;
   }
 
-  function hasTransitions () {
+  function transitionsSupported () {
     var fake = document.createElement("div");
     return fake.style.transition !== undefined;
   }
