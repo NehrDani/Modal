@@ -8,11 +8,25 @@
   <script src="modal.js"></script>
 </head>
 <body>
+  <div id="content" class="hidden">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam est eaque voluptates, inventore aliquam quaerat fugit autem sint laborum ea facilis natus neque veniam voluptatibus cupiditate error excepturi iste aspernatur id possimus illo iusto accusamus. Totam eaque eligendi quasi nesciunt ea perferendis quis, nihil quo sapiente quia repellat ipsam, illo.</p>
+    <p>Distinctio officiis, optio vel delectus quasi. Maxime placeat voluptatibus, ex nam, illo dolore vitae, dolorem, quis eligendi perspiciatis necessitatibus tenetur unde ducimus? Eaque voluptate in veritatis impedit qui voluptatum incidunt laboriosam. Iusto delectus harum officia sequi veritatis aliquam totam molestias, animi nobis, suscipit aperiam! Ad repellat enim ducimus exercitationem ipsa.</p>
+    <p>Laborum numquam labore cupiditate, eos eligendi vel delectus quas dicta ipsa non dolorem assumenda excepturi culpa illo vero animi ducimus tempore quae temporibus velit. Magnam eos veritatis nam minima distinctio sunt ea. Cumque, repellendus ratione culpa. Blanditiis iusto ullam tenetur, laudantium, veritatis, excepturi recusandae provident voluptates quibusdam eum voluptatum corporis.</p>
+    <p>Dolores autem vitae possimus tempora officiis voluptates magni omnis, porro. Unde, blanditiis? Nostrum inventore natus sed excepturi repellendus, obcaecati pariatur ex eum, reprehenderit officiis, vel nihil recusandae rerum enim sapiente iusto quis, suscipit officia unde. Dicta qui nisi adipisci, reiciendis illo, atque voluptatibus. Itaque pariatur cumque tempora a ut libero.</p>
+    <p>Tenetur magnam voluptate, voluptas. Ex commodi omnis deleniti non itaque excepturi perspiciatis adipisci eligendi inventore animi fugiat dolor quo eaque, illum, obcaecati, incidunt numquam, delectus amet beatae labore. Reprehenderit ratione quisquam doloremque voluptatum, numquam molestiae assumenda at ullam accusantium libero tempora delectus ea dolores mollitia sit. Minus porro rem deserunt!</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam est eaque voluptates, inventore aliquam quaerat fugit autem sint laborum ea facilis natus neque veniam voluptatibus cupiditate error excepturi iste aspernatur id possimus illo iusto accusamus. Totam eaque eligendi quasi nesciunt ea perferendis quis, nihil quo sapiente quia repellat ipsam, illo.</p>
+    <p>Distinctio officiis, optio vel delectus quasi. Maxime placeat voluptatibus, ex nam, illo dolore vitae, dolorem, quis eligendi perspiciatis necessitatibus tenetur unde ducimus? Eaque voluptate in veritatis impedit qui voluptatum incidunt laboriosam. Iusto delectus harum officia sequi veritatis aliquam totam molestias, animi nobis, suscipit aperiam! Ad repellat enim ducimus exercitationem ipsa.</p>
+    <p>Laborum numquam labore cupiditate, eos eligendi vel delectus quas dicta ipsa non dolorem assumenda excepturi culpa illo vero animi ducimus tempore quae temporibus velit. Magnam eos veritatis nam minima distinctio sunt ea. Cumque, repellendus ratione culpa. Blanditiis iusto ullam tenetur, laudantium, veritatis, excepturi recusandae provident voluptates quibusdam eum voluptatum corporis.</p>
+    <p>Dolores autem vitae possimus tempora officiis voluptates magni omnis, porro. Unde, blanditiis? Nostrum inventore natus sed excepturi repellendus, obcaecati pariatur ex eum, reprehenderit officiis, vel nihil recusandae rerum enim sapiente iusto quis, suscipit officia unde. Dicta qui nisi adipisci, reiciendis illo, atque voluptatibus. Itaque pariatur cumque tempora a ut libero.</p>
+    <p>Tenetur magnam voluptate, voluptas. Ex commodi omnis deleniti non itaque excepturi perspiciatis adipisci eligendi inventore animi fugiat dolor quo eaque, illum, obcaecati, incidunt numquam, delectus amet beatae labore. Reprehenderit ratione quisquam doloremque voluptatum, numquam molestiae assumenda at ullam accusantium libero tempora delectus ea dolores mollitia sit. Minus porro rem deserunt!</p>
+  </div>
+
   <button type="button" class="btn btn-default">open</button>
 
   <script>
+    var content = document.getElementById("content");
     var modal = new Modal({
-      content: "Hello World"
+      content: content.innerHTML
     });
     document.querySelector("button")
       .addEventListener("click", function () {

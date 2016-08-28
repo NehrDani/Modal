@@ -1,9 +1,9 @@
 /* Modal Base CSS */
-.js-modal, .js-modal * {
+.modal, .modal * {
   box-sizing: border-box;
 }
 
-.js-modal {
+.modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -15,22 +15,21 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.js-modal-dialog {
+.modal-dialog {
   position: relative;
-  width: 560px;
-  margin: 10px auto;
+  width: auto;
+  margin: 10px;
 }
 
-.js-modal-content {
+.modal-content {
   position: relative;
   background-color: #fff;
   background-clip: padding-box;
   border: 1px solid rgba(0,0,0,.2);
   border-radius: 4px;
-  -webkit-background-clip: padding-box;
 }
 
-.js-modal-backdrop {
+.modal-backdrop {
   position: fixed;
   top: 0;
   right: 0;
@@ -38,31 +37,98 @@
   left: 0;
   z-index: 1000;
   background-color: #000;
-  opacity: 0;
-  transition: .20s opacity ease;
-  transition-delay: .20s;
-}
-.js-modal-backdrop.in {
-  opacity: 0.5;
-  transition-delay: 0s;
 }
 
 /* Class bound to the body element when modal is open */
-.js-modal-open {
+.modal-open {
   overflow: hidden;
 }
-.js-modal-open .js-modal {
+.modal-open .modal {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
+/* Responsive */
+@media (min-width: 544px) {
+  .modal-dialog {
+    max-width: 600px;
+    margin: 30px auto;
+  }
+
+  .modal-sm {
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-lg {
+    max-width: 900px;
+  }
+}
+
 /* Modal Animations CSS */
+
+/* Fade */
 .fade {
   opacity: 0;
-  transition: opacity .20s ease;
-  transition-delay: 0s;
+  transition: opacity .15s linear;
+  transition-delay: .3s;
 }
 .fade.in {
   opacity: 1;
-  transition-delay: .20s;
+  transition-delay: 0s;
+}
+
+.modal.fade .modal-dialog {
+  transform: none;
+  opacity: 0;
+  transition: opacity .3s ease-out;
+  transition-delay: 0s;
+}
+
+/* Zoom */
+.zoom {
+  opacity: 0;
+  transition: opacity .15s linear;
+  transition-delay: .3s;
+}
+.zoom.in {
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.modal.zoom .modal-dialog {
+  transition: transform .3s ease-out;
+  transform: scale(0);
+  transition-delay: 0s;
+}
+
+/* Slide */
+.slide {
+  opacity: 0;
+  transition: opacity .15s linear;
+  transition-delay: .3s;
+}
+.slide.in {
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.modal.slide .modal-dialog {
+  opacity: 0;
+  transform: translate(0, -25%);
+  transition: opacity .3s ease-out, transform .3s ease-out;
+  transition-delay: 0s;
+}
+
+/* Animation End States */
+.modal.in .modal-dialog {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0, 0) scale(1);
+  transition-delay: .15s;
+}
+
+.modal-backdrop.in {
+  opacity: .8;
 }

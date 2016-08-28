@@ -3,7 +3,10 @@
 
   function Modal () {
     var defaults = {
-      content: ""
+      content: "",
+      animation: "fade",
+      size: null,
+      customClass: null
     };
 
     this.modal = null;
@@ -17,8 +20,9 @@
   };
 
   function open () {
-    document.body.classList.add("js-modal-open");
+    document.body.classList.add("modal-open");
     createModal.call(this);
+    this.modal.style.display = "block";
 
     /*
      * After adding elements to the DOM, use getComputedStyle
@@ -28,34 +32,40 @@
 
     window.getComputedStyle(this.modal).height;
 
-    // Add class to start animation
+    // Add class to start open animation
     this.backdrop.classList.add("in");
     this.modal.classList.add("in");
   }
 
   function close () {
-    var _ = this;
+    var self = this;
 
-    this.modal.addEventListener("transitionend", function () {
-      _.modal.parentNode.removeChild(_.modal);
+    // Listen for transitionend to remove the DOMNodes afterwards
+    this.modal.addEventListener("transitionend", function (e) {
+      if (e.target === self.modal)
+        self.modal.parentNode.removeChild(self.modal);
     });
 
     this.backdrop.addEventListener("transitionend", function () {
-      _.backdrop.parentNode.removeChild(_.backdrop);
-      document.body.classList.remove("js-modal-open");
+      self.backdrop.parentNode.removeChild(self.backdrop);
+      document.body.classList.remove("modal-open");
     });
 
+    // Remove class to start close animation
+    this.modal.classList.remove("in");
+    this.backdrop.classList.remove("in");
+
+    // Trigger the event manually if transitions are not supported
     if (! hasTransitions()) {
       triggerEvent(this.modal, "transitionend");
       triggerEvent(this.backdrop, "transitionend");
     }
-
-    this.modal.classList.remove("in");
-    this.backdrop.classList.remove("in");
   }
 
   function createModal () {
     var dialog, content, fragment;
+    var self = this;
+    var animation = this.options.animation || "";
 
     // Create a document fragment for DOM building
     fragment = document.createDocumentFragment();
@@ -63,7 +73,7 @@
     /* <backdrop> */
 
     this.backdrop = document.createElement("div");
-    this.backdrop.className = "js-modal-backdrop";
+    this.backdrop.className = "modal-backdrop " + animation;
 
     fragment.appendChild(this.backdrop);
 
@@ -72,19 +82,28 @@
     /* <modal> */
 
     this.modal = document.createElement("div");
-    this.modal.className = "js-modal fade";
+    this.modal.className = "modal " + animation;
 
-    this.modal.addEventListener("click", this.close.bind(this));
+    this.modal.addEventListener("click", function (e) {
+      // Close only if target is the modal, not it's children
+      if (e.target === self.modal)
+        self.close.call(self);
+    });
 
     /* <dialog> */
 
     dialog = document.createElement("div");
-    dialog.className = "js-modal-dialog";
+    dialog.className = "modal-dialog";
+
+    if (typeof this.options.size === "string")
+      dialog.classList.add("modal-" + this.options.size);
+    else if (typeof this.options.size === "number")
+      dialog.style.width = this.options.size + "px";
 
     /* <content> */
 
     content = document.createElement("div");
-    content.className = "js-modal-content";
+    content.className = "modal-content";
 
     /*
      * If content is an HTML string, append the HTML string.
