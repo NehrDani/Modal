@@ -8,9 +8,12 @@
       content: "",
       animation: "fade",
       size: null,
-      customClass: ""
+      customClass: "",
+      onOpen: null,
+      onClose: null
     };
 
+    this.isOpen = false;
     this.modal = null;
     this.backdrop = null;
     this.dialog = null;
@@ -23,51 +26,72 @@
   };
 
   function open () {
-    createModal.call(this);
+    if (this.isOpen === false) {
+      this.isOpen = true;
+      createModal.call(this);
 
-    /*
-     * After adding elements to the DOM, use getComputedStyle
-     * to force the browser to recalc and recognize the added elements.
-     * Get the CSS animation starting point
-     */
+      /*
+       * After adding elements to the DOM, use getComputedStyle
+       * to force the browser to recalc and recognize the added elements.
+       * Get the CSS animation starting point
+       */
 
-    window.getComputedStyle(this.modal).height;
+      window.getComputedStyle(this.modal).height;
 
-    // Add class to start open animation
-    document.body.classList.add("modal-open");
-    this.backdrop.classList.add("in");
-    this.modal.classList.add("in");
+      // Add class to start open animation
+      document.body.classList.add("modal-open");
+      this.backdrop.classList.add("in");
+      this.modal.classList.add("in");
+
+      if (typeof this.options.onOpen === "function")
+        this.options.onOpen.apply(this, arguments);
+
+      return this;
+    }
+
+    return false;
   }
 
   function close () {
-    var self = this;
+    if (this.isOpen === true) {
 
-    if (this.options.animation) {
-      // Listen for transitionend to remove the DOMNodes afterwards
-      this.modal.addEventListener("transitionend", function (e) {
-        if (e.target === self.modal) {
-          self.modal.parentNode.removeChild(self.modal);
+      this.isOpen = false;
+      var self = this;
+
+      if (this.options.animation) {
+        // Listen for transitionend to remove the DOMNodes afterwards
+        this.modal.addEventListener("transitionend", function (e) {
+          if (e.target === self.modal) {
+            self.modal.parentNode.removeChild(self.modal);
+          }
+        });
+
+        this.backdrop.addEventListener("transitionend", function () {
+          self.backdrop.parentNode.removeChild(self.backdrop);
+          document.body.classList.remove("modal-open");
+        });
+
+        // Trigger the event manually if transitions are not supported
+        if (! TRANSITIONS_SUPPORTED) {
+          triggerEvent(this.modal, "transitionend");
+          triggerEvent(this.backdrop, "transitionend");
         }
-      });
 
-      this.backdrop.addEventListener("transitionend", function () {
-        self.backdrop.parentNode.removeChild(self.backdrop);
-        document.body.classList.remove("modal-open");
-      });
-
-      // Trigger the event manually if transitions are not supported
-      if (! TRANSITIONS_SUPPORTED) {
-        triggerEvent(this.modal, "transitionend");
-        triggerEvent(this.backdrop, "transitionend");
+        // Remove class to start close animation
+        this.modal.classList.remove("in");
+        this.backdrop.classList.remove("in");
+      } else {
+        this.modal.parentNode.removeChild(this.modal);
+        this.backdrop.parentNode.removeChild(this.backdrop);
       }
 
-      // Remove class to start close animation
-      this.modal.classList.remove("in");
-      this.backdrop.classList.remove("in");
-    } else {
-      this.modal.parentNode.removeChild(this.modal);
-      this.backdrop.parentNode.removeChild(this.backdrop);
+      if (typeof this.options.onClose === "function")
+        this.options.onClose.apply(this, arguments);
+
+      return this;
     }
+
+    return false;
   }
 
   function createModal () {
@@ -96,7 +120,7 @@
     this.modal.addEventListener("click", function (e) {
       // Close only if target is the modal, not it's children
       if (e.target === self.modal)
-        self.close.call(self);
+        self.dismiss.call(self);
     });
 
     /* <dialog> */

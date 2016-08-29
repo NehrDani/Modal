@@ -10,31 +10,59 @@
 <body>
   <div id="content" class="modal-content">
     <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <button type="button" class="close" modal-dismiss="cancel">&times;</button>
       <h4 class="modal-title">Modal title</h4>
     </div>
     <div class="modal-body">
       <p>One fine body&hellip;</p>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Save changes</button>
+      <button type="button" class="btn btn-default" modal-dismiss="cancel">Close</button>
+      <button type="button" class="btn btn-primary" modal-close="OK">OK</button>
     </div>
   </div>
 
   <button id="open" type="button" class="btn btn-default">open</button>
 
   <script>
-    var fragment = document.createDocumentFragment();
-    fragment.appendChild(document.getElementById("content"));
+    var content = document.getElementById("content");
+    var fragment = document.createElement("div");
+    fragment.appendChild(content);
+
     var modal = new Modal({
-      content: fragment
+      content: fragment,
+      onOpen: function () {
+        // Alternative A:
+        bindEventListener(this.dialog);
+      },
+      onClose: function () {
+        alert(arguments[0]);
+        return false;
+      }
     });
+
     document.getElementById("open")
       .addEventListener("click", function () {
         modal.open();
-        console.log(modal);
+
+        // Alternative B:
+        // bindEventListener(modal.dialog);
       });
+
+    /* Utility methods */
+    function bindEventListener (content) {
+      content.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
+        el.addEventListener("click", function () {
+          modal.close("Dismissed!");
+        });
+      });
+
+      content.querySelectorAll("[modal-close]").forEach(function (el, i) {
+        el.addEventListener("click", function () {
+          modal.close("Okay ;-)");
+        });
+      });
+    }
   </script>
 </body>
 </html>
