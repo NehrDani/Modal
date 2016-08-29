@@ -48,6 +48,9 @@
 
       this.modal.classList.add("in");
 
+      // focus the modal to be completely blocking
+      this.modal.focus();
+
       if (typeof this.options.onOpen === "function")
         this.options.onOpen.apply(this, arguments);
 
@@ -137,6 +140,7 @@
     /* <modal> */
 
     this.modal = document.createElement("div");
+    this.modal.setAttribute("tabindex", -1);
     this.modal.className = "modal " + animation;
 
     this.modal.addEventListener("click", function (e) {
