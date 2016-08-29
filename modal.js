@@ -6,6 +6,8 @@
   function Modal () {
     var defaults = {
       content: "",
+      container: null, // TODO: Define alternative container for modal
+      backdrop: true,
       animation: "fade",
       size: null,
       customClass: "",
@@ -40,7 +42,10 @@
 
       // Add class to start open animation
       document.body.classList.add("modal-open");
-      this.backdrop.classList.add("in");
+
+      if (this.options.backdrop === true)
+        this.backdrop.classList.add("in");
+
       this.modal.classList.add("in");
 
       if (typeof this.options.onOpen === "function")
@@ -59,6 +64,8 @@
       var self = this;
 
       if (this.options.animation) {
+        /* modal */
+
         // Listen for transitionend to remove the DOMNodes afterwards
         this.modal.addEventListener("transitionend", function (e) {
           if (e.target === self.modal) {
@@ -66,23 +73,36 @@
           }
         });
 
-        this.backdrop.addEventListener("transitionend", function () {
-          self.backdrop.parentNode.removeChild(self.backdrop);
-          document.body.classList.remove("modal-open");
-        });
-
         // Trigger the event manually if transitions are not supported
-        if (! TRANSITIONS_SUPPORTED) {
+        if (! TRANSITIONS_SUPPORTED)
           triggerEvent(this.modal, "transitionend");
-          triggerEvent(this.backdrop, "transitionend");
-        }
 
         // Remove class to start close animation
         this.modal.classList.remove("in");
-        this.backdrop.classList.remove("in");
+
+        /* !modal */
+
+        /* backdrop */
+
+        if (this.options.backdrop === true) {
+          this.backdrop.addEventListener("transitionend", function () {
+            self.backdrop.parentNode.removeChild(self.backdrop);
+            document.body.classList.remove("modal-open");
+          });
+
+          // Trigger the event manually if transitions are not supported
+          if (! TRANSITIONS_SUPPORTED)
+            triggerEvent(this.backdrop, "transitionend");
+
+          // Remove class to start close animation
+          this.backdrop.classList.remove("in");
+        }
+
+        /* !backdrop */
       } else {
         this.modal.parentNode.removeChild(this.modal);
-        this.backdrop.parentNode.removeChild(this.backdrop);
+        if (this.options.backdrop === true)
+          this.backdrop.parentNode.removeChild(this.backdrop);
       }
 
       if (typeof this.options.onClose === "function")
@@ -105,10 +125,12 @@
 
     /* <backdrop> */
 
-    this.backdrop = document.createElement("div");
-    this.backdrop.className = "modal-backdrop " + animation;
+    if (this.options.backdrop === true) {
+      this.backdrop = document.createElement("div");
+      this.backdrop.className = "modal-backdrop " + animation;
 
-    fragment.appendChild(this.backdrop);
+      fragment.appendChild(this.backdrop);
+    }
 
     /* </backdrop> */
 
@@ -120,7 +142,7 @@
     this.modal.addEventListener("click", function (e) {
       // Close only if target is the modal, not it's children
       if (e.target === self.modal)
-        self.dismiss.call(self);
+        self.close.call(self, false);
     });
 
     /* <dialog> */
