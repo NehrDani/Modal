@@ -13,6 +13,7 @@
     var defaults = {
       content: "",
       backdrop: true,
+      closable: true,
       animation: "fade",
       size: null,
       customClass: "",
@@ -148,11 +149,13 @@
     this.modal.setAttribute("tabindex", -1);
     this.modal.className = "modal " + animation;
 
-    this.modal.addEventListener("click", function (e) {
-      // Close only if target is the modal, not it's children
-      if (e.target === self.modal)
-        self.close.call(self, false);
-    });
+    if (this.options.closable === true) {
+      this.modal.addEventListener("click", function (e) {
+        // Close only if target is the modal, not it's children
+        if (e.target === self.modal)
+          self.close.call(self, false);
+      });
+    }
 
     /* <dialog> */
 
