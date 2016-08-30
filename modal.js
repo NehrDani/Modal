@@ -1,3 +1,9 @@
+/*!
+ * Modal
+ *
+ * Copyright © 2016 Daniel Nehring | MIT license | https://github.com/NehrDani/Modal
+ */
+
 (function(window, document, undefined) {
   var TRANSITIONS_SUPPORTED = transitionsSupported();
 
@@ -6,7 +12,6 @@
   function Modal () {
     var defaults = {
       content: "",
-      container: null, // TODO: Define alternative container for modal
       backdrop: true,
       animation: "fade",
       size: null,
@@ -76,12 +81,12 @@
           }
         });
 
+        // Remove class to start close animation
+        this.modal.classList.remove("in");
+
         // Trigger the event manually if transitions are not supported
         if (! TRANSITIONS_SUPPORTED)
           triggerEvent(this.modal, "transitionend");
-
-        // Remove class to start close animation
-        this.modal.classList.remove("in");
 
         /* !modal */
 
@@ -93,12 +98,12 @@
             document.body.classList.remove("modal-open");
           });
 
+          // Remove class to start close animation
+          this.backdrop.classList.remove("in");
+
           // Trigger the event manually if transitions are not supported
           if (! TRANSITIONS_SUPPORTED)
             triggerEvent(this.backdrop, "transitionend");
-
-          // Remove class to start close animation
-          this.backdrop.classList.remove("in");
         }
 
         /* !backdrop */
