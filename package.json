@@ -2,11 +2,17 @@
   "name": "modal",
   "version": "0.3.0",
   "description": "Javascript Modal Dialog | lightweight, customizable CSS, no dependencies | inspired by Bootstrap",
+  "scripts": {
+    "uglify": "uglifyjs --compress --mangle -o modal.min.js modal.js"
+  },
   "keywords": [
     "javascript",
     "modal",
     "dialog"
   ],
   "author": "Daniel Nehring",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "uglifyjs": "^2.4.10"
+  }
 }
