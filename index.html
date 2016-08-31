@@ -42,13 +42,13 @@
 
   <main class="container">
     <div class="row">
-      <section id="demo-bootstrap" class="col-md-4">
+      <section id="demo-bootstrap" class="col-md-6">
         <header class="page-header">
-          <h2>Like Bootstrap</h2>
+          <h2>With Bootstrap</h2>
         </header>
 
         <div class="form-group">
-          <button id="open" type="button" class="btn btn-default">open</button>
+          <button id="open" type="button" class="btn btn-primary btn-lg">Launch Bootstrap Modal</button>
         </div>
 
         <div id="modal-bootstrap" class="modal-content">
@@ -76,7 +76,6 @@
             <p>Facere eius quisquam nisi, illo optio placeat! Aliquid eveniet quidem ut deleniti obcaecati ab eaque doloribus soluta dolorem, suscipit facere, fugiat! Ducimus autem id, quisquam beatae aut. Non, quibusdam, quod?</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" modal-dismiss="cancel">Close</button>
             <button type="button" class="btn btn-primary" modal-close="OK">OK</button>
           </div>
         </div>
@@ -89,16 +88,7 @@
 
             var modal = new Modal({
               animation: "slide",
-              content: fragment,
-              onOpen: function () {
-                triggerAction("Modal Opened!");
-              },
-              onClose: function (status, msg) {
-                if (status === false)
-                  triggerAction("Modal Dismissed!");
-                else
-                  triggerAction(msg, status)
-              }
+              content: fragment
             });
 
             document.getElementById("open")
@@ -121,66 +111,84 @@
         </script>
       </section>
 
-      <section id="demo-prompt" class="col-md-4">
+      <section id="demo-custom" class="col-md-6">
+        <style>
+          #modal-custom {
+            position: relative;
+            text-align: center;
+            width: 380px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 0 20px 0 20px;
+          }
+
+          #custom-response {
+            display: none;
+          }
+        </style>
+
         <header class="page-header">
-          <h2>Input Prompt</h2>
+          <h2>Custom <small>with callback</small></h2>
         </header>
 
         <div class="form-group">
-          <button id="open-prompt" type="button" class="btn btn-default">open</button>
+          <button id="open-custom" type="button" class="btn btn-primary btn-lg">Open Custom Modal</button>
         </div>
+        <p id="custom-response"></p>
 
-        <div id="modal-prompt" class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" modal-dismiss="cancel">&times;</button>
-            <h4 class="modal-title">Your name?</h4>
-          </div>
-          <div class="modal-body">
+        <div id="modal-custom" class="custom-content">
+          <div class="custom-body">
+            <h3>Who are you?</h3>
             <div class="form-group">
-              <label>Enter your name: </label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control input-lg">
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" modal-dismiss="cancel">Cancel</button>
-            <button type="button" class="btn btn-primary" modal-close="OK">OK</button>
+            <button type="button" class="btn btn-primary btn-lg" modal-close>Tell</button>
+            <button type="button" class="btn btn-default btn-lg" modal-dismiss>It's my secret ;-)</button>
           </div>
         </div>
 
         <script>
           document.addEventListener("DOMContentLoaded", function () {
-            var content = document.getElementById("modal-prompt");
+            var content = document.getElementById("modal-custom");
             var fragment = document.createDocumentFragment();
             fragment.appendChild(content);
 
+            var response = document.getElementById("custom-response");
+
             var modal = new Modal({
               content: fragment,
-              onOpen: function () {
-                triggerAction("Modal Opened!");
-              },
+              closable: false,
               onClose: function (status, msg) {
-                if (status === false)
-                  triggerAction("Modal Dismissed!");
-                else
-                  triggerAction(msg, status)
+                if (status === true) {
+                  if (!msg)
+                    response.innerHTML = "Ups, I think you missed something...";
+                  else
+                    response.innerHTML = "Hello, " + msg;
+                } else {
+                  response.innerHTML = "Too bad :-(";
+                }
+
+                response.style.display = "block";
               }
             });
 
-            document.getElementById("open-prompt")
+            document.getElementById("open-custom")
               .addEventListener("click", function () {
                 modal.open();
 
                 var input = modal.dialog.querySelector("input");
+                input.focus();
 
                 modal.dialog.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
                   el.addEventListener("click", function () {
-                    modal.close("error", "Cancel!");
+                    modal.close(false);
                   });
                 });
 
                 modal.dialog.querySelectorAll("[modal-close]").forEach(function (el, i) {
                   el.addEventListener("click", function () {
-                    modal.close("success", "Your name: " + input.value);
+                    modal.close(true, input.value);
                   });
                 });
               });
