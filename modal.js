@@ -24,7 +24,6 @@
     this.isOpen = false;
     this.modal = null;
     this.backdrop = null;
-    this.dialog = null;
     this.options = extend(defaults, arguments[0] || {});
   }
 
@@ -35,8 +34,7 @@
 
   function open () {
     if (this.isOpen === false) {
-      this.isOpen = true;
-      createModal.call(this);
+      assambleModal.call(this);
 
       /*
        * After adding elements to the DOM, use getComputedStyle
@@ -57,6 +55,9 @@
       // focus the modal to be completely blocking
       this.modal.focus();
 
+      // set open flag
+      this.isOpen = true;
+
       if (typeof this.options.onOpen === "function")
         this.options.onOpen.apply(this, arguments);
 
@@ -68,51 +69,48 @@
 
   function close () {
     if (this.isOpen === true) {
-
-      this.isOpen = false;
       var self = this;
+      /* modal */
 
-      if (this.options.animation) {
-        /* modal */
+      // Listen for transitionend to remove the DOMNodes afterwards
+      this.modal.addEventListener("transitionend", function (e) {
+        if (e.target === self.modal) {
+          this.removeEventListener("transitionend", arguments.callee);
+          document.body.classList.remove("modal-open");
+          self.modal.parentNode.removeChild(self.modal);
+          self.modal = null;
+        }
+      });
 
-        // Listen for transitionend to remove the DOMNodes afterwards
-        this.modal.addEventListener("transitionend", function (e) {
-          if (e.target === self.modal) {
-            self.modal.parentNode.removeChild(self.modal);
-          }
+      // Remove class to start close animation
+      this.modal.classList.remove("in");
+
+      // Trigger the event manually if transitions are not supported
+      if (! TRANSITIONS_SUPPORTED || ! this.options.animation)
+        triggerEvent(this.modal, "transitionend");
+
+      /* !modal */
+
+      /* backdrop */
+
+      if (this.options.backdrop === true) {
+        this.backdrop.addEventListener("transitionend", function () {
+          this.removeEventListener("transitionend", arguments.callee);
+          self.backdrop.parentNode.removeChild(self.backdrop);
+          self.backdrop = null;
         });
 
         // Remove class to start close animation
-        this.modal.classList.remove("in");
+        this.backdrop.classList.remove("in");
 
         // Trigger the event manually if transitions are not supported
-        if (! TRANSITIONS_SUPPORTED)
-          triggerEvent(this.modal, "transitionend");
-
-        /* !modal */
-
-        /* backdrop */
-
-        if (this.options.backdrop === true) {
-          this.backdrop.addEventListener("transitionend", function () {
-            self.backdrop.parentNode.removeChild(self.backdrop);
-            document.body.classList.remove("modal-open");
-          });
-
-          // Remove class to start close animation
-          this.backdrop.classList.remove("in");
-
-          // Trigger the event manually if transitions are not supported
-          if (! TRANSITIONS_SUPPORTED)
-            triggerEvent(this.backdrop, "transitionend");
-        }
-
-        /* !backdrop */
-      } else {
-        this.modal.parentNode.removeChild(this.modal);
-        if (this.options.backdrop === true)
-          this.backdrop.parentNode.removeChild(this.backdrop);
+        if (! TRANSITIONS_SUPPORTED || ! this.options.animation)
+          triggerEvent(this.backdrop, "transitionend");
       }
+
+      /* !backdrop */
+
+      this.isOpen = false;
 
       if (typeof this.options.onClose === "function")
         this.options.onClose.apply(this, arguments);
@@ -123,7 +121,7 @@
     return false;
   }
 
-  function createModal () {
+  function assambleModal () {
     var self = this;
 
     // Define the animation class
@@ -177,7 +175,7 @@
     if (typeof this.options.content === "string") {
       this.dialog.innerHTML = this.options.content;
     } else {
-      this.dialog.appendChild(this.options.content.cloneNode(true));
+      this.dialog.innerHTML = this.options.content.innerHTML;
     }
 
     /* </content> */
@@ -197,7 +195,7 @@
   /* Utility / Helper methods */
 
   function triggerEvent (element, eventName) {
-    var event = document.createEvent("HTMLEvents");
+    var event = document.createEvent("Event");
     event.initEvent(eventName, true, false);
     element.dispatchEvent(eventName);
     return element;
