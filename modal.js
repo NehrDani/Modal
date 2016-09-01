@@ -157,13 +157,13 @@
 
     /* <dialog> */
 
-    this.dialog = document.createElement("div");
-    this.dialog.className = "modal-dialog " + this.options.customClass;
+    var dialog = document.createElement("div");
+    dialog.className = "modal-dialog " + this.options.customClass;
 
     if (typeof this.options.size === "string")
-      this.dialog.classList.add("modal-" + this.options.size);
+      dialog.classList.add("modal-" + this.options.size);
     else if (typeof this.options.size === "number")
-      this.dialog.style.width = this.options.size + "px";
+      dialog.style.width = this.options.size + "px";
 
     /* <content> */
 
@@ -173,14 +173,14 @@
      */
 
     if (typeof this.options.content === "string") {
-      this.dialog.innerHTML = this.options.content;
+      dialog.innerHTML = this.options.content;
     } else {
-      this.dialog.innerHTML = this.options.content.innerHTML;
+      dialog.innerHTML = this.options.content.innerHTML;
     }
 
     /* </content> */
 
-    this.modal.appendChild(this.dialog);
+    this.modal.appendChild(dialog);
 
     /* </dialog> */
 
