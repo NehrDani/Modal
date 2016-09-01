@@ -13,7 +13,7 @@
     var defaults = {
       content: "",
       backdrop: true,
-      closable: true,
+      key: true,
       animation: "fade",
       size: null,
       customClass: "",
@@ -34,6 +34,7 @@
 
   function open () {
     if (this.isOpen === false) {
+      var self = this;
       assambleModal.call(this);
 
       /*
@@ -44,10 +45,30 @@
 
       window.getComputedStyle(this.modal).height;
 
+      if (this.options.backdrop !== "static") {
+        this.modal.addEventListener("click", function (e) {
+          // Close only if target is the modal, not it's children
+          if (e.target === self.modal) {
+            self.close.call(self, false);
+            this.removeEventListener("click", arguments.callee);
+          }
+        });
+      }
+
+      if (this.options.key === true) {
+        // Make closable on escape key
+        window.addEventListener("keydown", function (e) {
+          if (e.keyCode === 27) {
+            self.close.call(self, false);
+            this.removeEventListener("keydown", arguments.callee);
+          }
+        });
+      }
+
       // Add class to start open animation
       document.body.classList.add("modal-open");
 
-      if (this.options.backdrop === true)
+      if (this.options.backdrop)
         this.backdrop.classList.add("in");
 
       this.modal.classList.add("in");
@@ -93,7 +114,7 @@
 
       /* backdrop */
 
-      if (this.options.backdrop === true) {
+      if (this.options.backdrop) {
         this.backdrop.addEventListener("transitionend", function () {
           this.removeEventListener("transitionend", arguments.callee);
           self.backdrop.parentNode.removeChild(self.backdrop);
@@ -122,8 +143,6 @@
   }
 
   function assambleModal () {
-    var self = this;
-
     // Define the animation class
     var animation = this.options.animation || "";
 
@@ -132,7 +151,7 @@
 
     /* <backdrop> */
 
-    if (this.options.backdrop === true) {
+    if (this.options.backdrop !== false) {
       this.backdrop = document.createElement("div");
       this.backdrop.className = "modal-backdrop " + animation;
 
@@ -146,14 +165,6 @@
     this.modal = document.createElement("div");
     this.modal.setAttribute("tabindex", -1);
     this.modal.className = "modal " + animation;
-
-    if (this.options.closable === true) {
-      this.modal.addEventListener("click", function (e) {
-        // Close only if target is the modal, not it's children
-        if (e.target === self.modal)
-          self.close.call(self, false);
-      });
-    }
 
     /* <dialog> */
 
