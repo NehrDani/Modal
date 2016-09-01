@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Modal</title>
+  <title>Modal examples</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="modal.css">
   <script src="modal.js"></script>
@@ -38,9 +38,15 @@
   </style>
 </head>
 <body>
-  <div id="action"></div>
-
   <main class="container">
+    <div class="jumbotron">
+      <h1>Modal</h1>
+      <p>
+        Javascript Modal Dialog | lightweight, customizable CSS, no dependencies | inspired by Bootstrap
+      </p>
+      <a href="https://github.com/NehrDani/Modal">Modal source on GitHub</a>
+    </div>
+
     <div class="row">
       <section id="demo-bootstrap" class="col-md-6">
         <header class="page-header">
@@ -113,13 +119,14 @@
 
       <section id="demo-custom" class="col-md-6">
         <style>
-          .custom-content {
+          .custom-modal {
             position: relative;
             text-align: center;
-            margin: 0 auto;
-            background-color: #fff;
+            margin: 100px auto;
+            background-color: #eee;
             padding: 10px;
             border-radius: 0 20px 0 20px;
+            border: 1px solid #666;
           }
 
           #custom-response {
@@ -132,21 +139,19 @@
         </header>
 
         <div class="form-group">
-          <button id="open-custom" type="button" class="btn btn-primary btn-lg">Open Custom Modal</button>
+          <button id="open-custom" type="button" class="btn btn-primary btn-lg">Launch Custom Modal</button>
         </div>
         <p id="custom-response"></p>
 
 
         <div id="modal-custom" style="display: none;">
           <div class="custom-content">
-            <div class="custom-body">
-              <h3>Who are you?</h3>
-              <div class="form-group">
-                <input type="text" class="form-control input-lg">
-              </div>
-              <button type="button" class="btn btn-primary btn-lg" modal-close>Tell</button>
-              <button type="button" class="btn btn-default btn-lg" modal-dismiss>It's my secret ;-)</button>
+            <h3>Who are you?</h3>
+            <div class="form-group">
+              <input type="text" class="form-control input-lg">
             </div>
+            <button type="button" class="btn btn-primary btn-lg" modal-close>Tell</button>
+            <button type="button" class="btn btn-default btn-lg" modal-dismiss>It's my secret ;-)</button>
           </div>
         </div>
 
@@ -157,8 +162,10 @@
 
             var modal = new Modal({
               content: content,
-              closable: false,
+              backdrop: "static",
+              key: false,
               size: 320,
+              customClass: "custom-modal",
               onClose: function (status, msg) {
                 if (status === true) {
                   if (!msg)
