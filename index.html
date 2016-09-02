@@ -96,17 +96,15 @@
               animation: "slide",
               content: content,
               onOpen: function () {
-                modal.modal.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
-                    modal.close("error", "Cancel!");
+                modal.modal.querySelector("[modal-dismiss]")
+                  .addEventListener("click", function () {
+                    modal.close(false);
                   });
-                });
 
-                modal.modal.querySelectorAll("[modal-close]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
-                    modal.close("success", "Okay ;-)");
+                modal.modal.querySelecto("[modal-close]")
+                  .addEventListener("click", function () {
+                    modal.close(true);
                   });
-                });
               }
             });
 
@@ -171,17 +169,15 @@
                 var input = modal.modal.querySelector("input");
                 input.focus();
 
-                modal.modal.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
+                modal.modal.querySelector("[modal-dismiss]")
+                  .addEventListener("click", function () {
                     modal.close(false);
                   });
-                });
 
-                modal.modal.querySelectorAll("[modal-close]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
+                modal.modal.querySelector("[modal-close]")
+                  .addEventListener("click", function () {
                     modal.close(true, input.value);
                   });
-                });
               },
               onClose: function (status, msg) {
                 if (status === true) {
@@ -206,36 +202,5 @@
       </section>
     </div>
   </main>
-
-  <script>
-    var time = null;
-
-    function triggerAction (text, type) {
-      var indicator = document.getElementById("action");
-      indicator.className = "in";
-      indicator.innerHTML = text;
-
-      switch (type) {
-        case "success":
-          indicator.classList.add("success");
-          break;
-        case "error":
-          indicator.classList.add("error");
-          break;
-        default:
-          indicator.classList.add("default");
-          break;
-      }
-
-      if (time)
-        clearTimeout(time);
-
-      time = setTimeout(function () {
-        indicator.classList.remove("in");
-      }, 5000, function () {
-        indocator.className = "";
-      });
-    }
-  </script>
 </body>
 </html>
