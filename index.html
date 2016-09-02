@@ -94,13 +94,8 @@
 
             var modal = new Modal({
               animation: "slide",
-              content: content
-            });
-
-            document.getElementById("open")
-              .addEventListener("click", function () {
-                modal.open();
-
+              content: content,
+              onOpen: function () {
                 modal.modal.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
                   el.addEventListener("click", function () {
                     modal.close("error", "Cancel!");
@@ -112,6 +107,12 @@
                     modal.close("success", "Okay ;-)");
                   });
                 });
+              }
+            });
+
+            document.getElementById("open")
+              .addEventListener("click", function () {
+                modal.open();
               });
             });
         </script>
@@ -166,6 +167,22 @@
               key: false,
               size: 320,
               customClass: "custom-modal",
+              onOpen: function () {
+                var input = modal.modal.querySelector("input");
+                input.focus();
+
+                modal.modal.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
+                  el.addEventListener("click", function () {
+                    modal.close(false);
+                  });
+                });
+
+                modal.modal.querySelectorAll("[modal-close]").forEach(function (el, i) {
+                  el.addEventListener("click", function () {
+                    modal.close(true, input.value);
+                  });
+                });
+              },
               onClose: function (status, msg) {
                 if (status === true) {
                   if (!msg)
@@ -183,21 +200,6 @@
             document.getElementById("open-custom")
               .addEventListener("click", function () {
                 modal.open();
-
-                var input = modal.modal.querySelector("input");
-                input.focus();
-
-                modal.modal.querySelectorAll("[modal-dismiss]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
-                    modal.close(false);
-                  });
-                });
-
-                modal.modal.querySelectorAll("[modal-close]").forEach(function (el, i) {
-                  el.addEventListener("click", function () {
-                    modal.close(true, input.value);
-                  });
-                });
               });
             });
         </script>
