@@ -174,7 +174,7 @@
     if (typeof this.options.size === "string")
       dialog.classList.add("modal-" + this.options.size);
     else if (typeof this.options.size === "number")
-      dialog.style.width = this.options.size + "px";
+      dialog.style.maxWidth = this.options.size + "px";
 
     /* <content> */
 
