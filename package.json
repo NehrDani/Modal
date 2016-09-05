@@ -11,8 +11,16 @@
     "dialog",
     "customizable"
   ],
-  "author": "Daniel Nehring",
+  "author": "Daniel Nehring <nehrdani@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NehrDani/Modal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NehrDani/Modal/issues"
+  },
+  "homepage": "https://nehrdani.github.io/Modal/",
   "devDependencies": {
     "uglifyjs": "^2.4.10"
   }
