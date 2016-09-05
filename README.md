@@ -53,8 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
 * npm run uglify - minifies the source file for production use.
 
 ### About
-*Another Modal. I know what you think...  
-But there are not that many Modal plugins out there in vanilla javascript.  
-To be honest, I think you need no plugin at all for modal dialogs, but it helps ;-)*
+*Another Modal. I know what you think...*  
+*But there are not that many Modal plugins out there in vanilla javascript.*  
+*To be honest, I think you need no plugin at all for modal dialogs, but it helps ;-)*  
+*This is* __not__ *meant to be an all in one solution. This is from a developer for developers.*
 
 **Feel free to try, fork and share. I appreciate every feedback.**
