@@ -1,7 +1,7 @@
 /*!
  * Modal
  *
- * Copyright © 2016 Daniel Nehring | MIT license | https://github.com/NehrDani/Modal
+ * Copyright (c) 2016 Daniel Nehring | MIT license | https://github.com/NehrDani/Modal
  */
 
 (function(window, document, undefined) {

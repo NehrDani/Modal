@@ -1,5 +1,5 @@
 ## Javascript Modal
-**- Javascript Modal Dialog | lightweight, customizable CSS, no dependencies | inspired by Bootstrap -**
+**- Javascript Modal | lightweight, customizable, no dependencies | inspired by Bootstrap -**
 
 [Examples](https://nehrdani.github.io/Modal/)
 
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ### NPM
 * npm install - installs all needed dependencies
-* npm run uglify - minifies the datepicker.js file for production use.
+* npm run uglify - minifies the source file for production use.
 
 ### About
 *Another Modal. I know what you think...  
